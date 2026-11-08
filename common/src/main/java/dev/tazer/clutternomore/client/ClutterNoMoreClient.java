@@ -30,8 +30,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 //? if <1.21.4 {
-import dev.tazer.clutternomore.compat.EmiCompat;
-//?}
+/*import dev.tazer.clutternomore.compat.EmiCompat;
+*///?}
 //? if >=26 {
 /*import dev.tazer.clutternomore.compat.RrvCompat;
 *///?}
@@ -49,10 +49,10 @@ public final class ClutterNoMoreClient {
     public static final ClutterNoMoreConfig.Client CONFIG = ClutterNoMoreConfig.Client.createToml(Services.PLATFORM.getConfigDirectory(), ClutterNoMore.MOD_ID, "client", ClutterNoMoreConfig.Client.class);
     public static final KeyMapping SHAPE_KEY = new KeyMapping("key.clutternomore.change_block_shape", InputConstants.KEY_LALT,
             //? if >=1.21.9 {
-            /*KeyMapping.Category.INVENTORY
-            *///?} else {
-            "key.categories.inventory"
-            //?}
+            KeyMapping.Category.INVENTORY
+            //?} else {
+            /*"key.categories.inventory"
+            *///?}
     );
     private static final long SEND_INTERVAL_MS = 50L;
     private static final int PRESSED = 1;
@@ -115,8 +115,8 @@ public final class ClutterNoMoreClient {
         try {
             if (Services.PLATFORM.isModLoaded("jei") && JeiCompat.isHoveringIngredient()) return true;
             //? if <1.21.4 {
-            if (Services.PLATFORM.isModLoaded("emi") && EmiCompat.isHoveringIngredient()) return true;
-            //?}
+            /*if (Services.PLATFORM.isModLoaded("emi") && EmiCompat.isHoveringIngredient()) return true;
+            *///?}
             //? if >=26 {
             /*if (Services.PLATFORM.isModLoaded("rrv") && RrvCompat.isHoveringIngredient()) return true;
             *///?}
@@ -265,10 +265,10 @@ public final class ClutterNoMoreClient {
 
     public static int selectedSlot(Player player) {
         //? if >=1.21.5 {
-        /*return player.getInventory().getSelectedSlot();
-        *///?} else {
-        return player.getInventory().selected;
-        //?}
+        return player.getInventory().getSelectedSlot();
+        //?} else {
+        /*return player.getInventory().selected;
+        *///?}
     }
 
     public static void renderOverlay(GuiGraphics graphics, float partialTick) {
@@ -367,14 +367,14 @@ public final class ClutterNoMoreClient {
         if (key < 0) return false;
         //? if >=26.3 {
         /*return InputConstants.isKeyDown(key);
-        *///?} else if >=26 {
-        /*if (key < InputConstants.KEY_SPACE) return GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().handle(), key) == GLFW.GLFW_PRESS;
+        *///?} else if >=1.21.11 {
+        if (key < InputConstants.KEY_SPACE) return GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().handle(), key) == GLFW.GLFW_PRESS;
         return InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), key);
-        *///?} else {
-        long window = Minecraft.getInstance().getWindow().getWindow();
+        //?} else {
+        /*long window = Minecraft.getInstance().getWindow().getWindow();
         if (key < InputConstants.KEY_SPACE) return GLFW.glfwGetMouseButton(window, key) == GLFW.GLFW_PRESS;
         return InputConstants.isKeyDown(window, key);
-        //?}
+        *///?}
     }
 
     public static void onClientTick(Minecraft minecraft) {

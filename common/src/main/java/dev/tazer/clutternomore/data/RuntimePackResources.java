@@ -9,7 +9,7 @@ import com.google.gson.stream.JsonWriter;
 import dev.tazer.clutternomore.ClutterNoMore;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
@@ -23,13 +23,13 @@ import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.repository.PackSource;
 //?}
 //? if >=1.21.9 {
-/*import com.google.gson.Strictness;
+import com.google.gson.Strictness;
 import net.minecraft.server.packs.metadata.MetadataSectionType;
 import net.minecraft.server.packs.metadata.pack.PackFormat;
 import net.minecraft.util.InclusiveRange;
-*///?} else {
-import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
-//?}
+//?} else {
+/*import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
+*///?}
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -57,12 +57,12 @@ public final class RuntimePackResources extends AbstractPackResources {
 //?}
 
     //? if >=1.21.9 {
-    /*public static final InclusiveRange<PackFormat> RESOURCE_PACK_VERSION = SharedConstants.getCurrentVersion().packVersion(PackType.CLIENT_RESOURCES).minorRange();
+    public static final InclusiveRange<PackFormat> RESOURCE_PACK_VERSION = SharedConstants.getCurrentVersion().packVersion(PackType.CLIENT_RESOURCES).minorRange();
     public static final InclusiveRange<PackFormat> DATA_PACK_VERSION = SharedConstants.getCurrentVersion().packVersion(PackType.SERVER_DATA).minorRange();
-    *///?} else {
-    public static final int RESOURCE_PACK_VERSION = SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES);
+    //?} else {
+    /*public static final int RESOURCE_PACK_VERSION = SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES);
     public static final int DATA_PACK_VERSION = SharedConstants.getCurrentVersion().getPackVersion(PackType.SERVER_DATA);
-    //?}
+    *///?}
     //? if >=1.21 {
     private static final PackLocationInfo INFO = new PackLocationInfo(ClutterNoMore.MOD_ID + "-runtime", Component.literal("ClutterNoMore"), PackSource.BUILT_IN, Optional.empty());
     //?} else {
@@ -72,10 +72,10 @@ public final class RuntimePackResources extends AbstractPackResources {
     private static final int MIN_PACK_FORMAT = 15;
     private static final int MAX_PACK_FORMAT = 95;
 
-    private final Map<ResourceLocation, byte[]> clientResources = new ConcurrentHashMap<>();
-    private final Map<ResourceLocation, byte[]> serverData = new ConcurrentHashMap<>();
-    private final Map<ResourceLocation, byte[]> reloadedClientResources = new ConcurrentHashMap<>();
-    private final Map<ResourceLocation, byte[]> reloadedServerData = new ConcurrentHashMap<>();
+    private final Map<Identifier, byte[]> clientResources = new ConcurrentHashMap<>();
+    private final Map<Identifier, byte[]> serverData = new ConcurrentHashMap<>();
+    private final Map<Identifier, byte[]> reloadedClientResources = new ConcurrentHashMap<>();
+    private final Map<Identifier, byte[]> reloadedServerData = new ConcurrentHashMap<>();
     private final PackMetadataSection clientMetadata;
     private final PackMetadataSection serverMetadata;
 
@@ -86,21 +86,21 @@ public final class RuntimePackResources extends AbstractPackResources {
         super(INFO);
         //?}
         //? if >=1.21 && <1.21.9 {
-        this.clientMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Client Resources"), RESOURCE_PACK_VERSION, Optional.empty());
+        /*this.clientMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Client Resources"), RESOURCE_PACK_VERSION, Optional.empty());
         this.serverMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Server Data"), DATA_PACK_VERSION, Optional.empty());
-        //?} else {
-        /*this.clientMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Client Resources"), RESOURCE_PACK_VERSION);
+        *///?} else {
+        this.clientMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Client Resources"), RESOURCE_PACK_VERSION);
         this.serverMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Server Data"), DATA_PACK_VERSION);
-        *///?}
+        //?}
     }
 
     public static String serializeJson(JsonElement json) {
         try (StringWriter output = new StringWriter(); JsonWriter writer = new JsonWriter(output)) {
             //? if >=1.21.9 {
-            /*writer.setStrictness(Strictness.LENIENT);
-            *///?} else {
-            writer.setLenient(true);
-            //?}
+            writer.setStrictness(Strictness.LENIENT);
+            //?} else {
+            /*writer.setLenient(true);
+            *///?}
             writer.setIndent("  ");
             Streams.write(json, writer);
             return output.toString();
@@ -109,7 +109,7 @@ public final class RuntimePackResources extends AbstractPackResources {
         }
     }
 
-    public void addJson(PackType type, ResourceLocation id, JsonElement json) {
+    public void addJson(PackType type, Identifier id, JsonElement json) {
         this.resources(type).put(id, serializeJson(json).getBytes(StandardCharsets.UTF_8));
     }
 
@@ -117,11 +117,11 @@ public final class RuntimePackResources extends AbstractPackResources {
         this.reloaded(type).clear();
     }
 
-    public void addReloaded(PackType type, ResourceLocation id, byte[] contents) {
+    public void addReloaded(PackType type, Identifier id, byte[] contents) {
         this.reloaded(type).put(id, contents);
     }
 
-    public void addReloadedJson(PackType type, ResourceLocation id, JsonElement json) {
+    public void addReloadedJson(PackType type, Identifier id, JsonElement json) {
         this.addReloaded(type, id, serializeJson(json).getBytes(StandardCharsets.UTF_8));
     }
 
@@ -137,9 +137,9 @@ public final class RuntimePackResources extends AbstractPackResources {
                     Files.delete(path);
                 }
             }
-            Map<ResourceLocation, byte[]> contents = new HashMap<>(this.resources(type));
+            Map<Identifier, byte[]> contents = new HashMap<>(this.resources(type));
             contents.putAll(this.reloaded(type));
-            for (Map.Entry<ResourceLocation, byte[]> entry : contents.entrySet()) {
+            for (Map.Entry<Identifier, byte[]> entry : contents.entrySet()) {
                 Path file = folder.resolve(entry.getKey().getNamespace()).resolve(entry.getKey().getPath());
                 Files.createDirectories(file.getParent());
                 Files.write(file, entry.getValue());
@@ -154,10 +154,10 @@ public final class RuntimePackResources extends AbstractPackResources {
         JsonObject pack = new JsonObject();
         pack.add("description", new JsonPrimitive("Generated resources for ClutterNoMore"));
         //? if <1.21.9 {
-        pack.add("pack_format", new JsonPrimitive(RESOURCE_PACK_VERSION));
-        //?} else {
-        /*pack.add("pack_format", new JsonPrimitive(MIN_PACK_FORMAT));
-        *///?}
+        /*pack.add("pack_format", new JsonPrimitive(RESOURCE_PACK_VERSION));
+        *///?} else {
+        pack.add("pack_format", new JsonPrimitive(MIN_PACK_FORMAT));
+        //?}
         pack.add("min_format", new JsonPrimitive(MIN_PACK_FORMAT));
         pack.add("max_format", new JsonPrimitive(MAX_PACK_FORMAT));
         JsonArray supported = new JsonArray(2);
@@ -170,11 +170,11 @@ public final class RuntimePackResources extends AbstractPackResources {
         Files.writeString(root.resolve("pack.mcmeta"), serializeJson(meta));
     }
 
-    private Map<ResourceLocation, byte[]> resources(PackType type) {
+    private Map<Identifier, byte[]> resources(PackType type) {
         return type == PackType.CLIENT_RESOURCES ? this.clientResources : this.serverData;
     }
 
-    private Map<ResourceLocation, byte[]> reloaded(PackType type) {
+    private Map<Identifier, byte[]> reloaded(PackType type) {
         return type == PackType.CLIENT_RESOURCES ? this.reloadedClientResources : this.reloadedServerData;
     }
 
@@ -189,17 +189,17 @@ public final class RuntimePackResources extends AbstractPackResources {
     public Set<String> getNamespaces(PackType type) {
         Set<String> namespaces = new HashSet<>();
         namespaces.add(ClutterNoMore.MOD_ID);
-        for (ResourceLocation id : this.resources(type).keySet()) {
+        for (Identifier id : this.resources(type).keySet()) {
             namespaces.add(id.getNamespace());
         }
-        for (ResourceLocation id : this.reloaded(type).keySet()) {
+        for (Identifier id : this.reloaded(type).keySet()) {
             namespaces.add(id.getNamespace());
         }
         return Set.copyOf(namespaces);
     }
 
     //? if >=1.21.9 {
-    /*@Override
+    @Override
     @Nullable
     @SuppressWarnings("unchecked")
     public <T> T getMetadataSection(MetadataSectionType<T> type) {
@@ -207,14 +207,14 @@ public final class RuntimePackResources extends AbstractPackResources {
         if (type == PackMetadataSection.SERVER_TYPE) return (T) this.serverMetadata;
         return null;
     }
-    *///?} else {
-    @Override
+    //?} else {
+    /*@Override
     @Nullable
     @SuppressWarnings("unchecked")
     public <T> T getMetadataSection(MetadataSectionSerializer<T> deserializer) {
         return deserializer == PackMetadataSection.TYPE ? (T) this.clientMetadata : null;
     }
-    //?}
+    *///?}
 
     @Override
     @Nullable
@@ -224,7 +224,7 @@ public final class RuntimePackResources extends AbstractPackResources {
 
     @Override
     @Nullable
-    public IoSupplier<InputStream> getResource(PackType type, ResourceLocation id) {
+    public IoSupplier<InputStream> getResource(PackType type, Identifier id) {
         byte[] reloaded = this.reloaded(type).get(id);
         byte[] resource = reloaded == null ? this.resources(type).get(id) : reloaded;
         return resource == null ? null : () -> new ByteArrayInputStream(resource);
@@ -232,18 +232,18 @@ public final class RuntimePackResources extends AbstractPackResources {
 
     @Override
     public void listResources(PackType type, String namespace, String path, PackResources.ResourceOutput output) {
-        Map<ResourceLocation, byte[]> reloaded = this.reloaded(type);
-        for (Map.Entry<ResourceLocation, byte[]> entry : reloaded.entrySet()) {
+        Map<Identifier, byte[]> reloaded = this.reloaded(type);
+        for (Map.Entry<Identifier, byte[]> entry : reloaded.entrySet()) {
             list(entry.getKey(), entry.getValue(), namespace, path, output);
         }
-        for (Map.Entry<ResourceLocation, byte[]> entry : this.resources(type).entrySet()) {
+        for (Map.Entry<Identifier, byte[]> entry : this.resources(type).entrySet()) {
             if (!reloaded.containsKey(entry.getKey())) {
                 list(entry.getKey(), entry.getValue(), namespace, path, output);
             }
         }
     }
 
-    private static void list(ResourceLocation id, byte[] resource, String namespace, String path, PackResources.ResourceOutput output) {
+    private static void list(Identifier id, byte[] resource, String namespace, String path, PackResources.ResourceOutput output) {
         if (id.getNamespace().equals(namespace) && id.getPath().startsWith(path)) {
             output.accept(id, () -> new ByteArrayInputStream(resource));
         }

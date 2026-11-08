@@ -10,8 +10,8 @@ import dev.tazer.clutternomore.client.ClutterNoMoreClient;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 //? if >=1.21.9 {
-/*import net.minecraft.client.KeyMapping;
-*///?}
+import net.minecraft.client.KeyMapping;
+//?}
 
 import java.util.Optional;
 
@@ -38,9 +38,9 @@ public final class ControlifyCompat {
 
     private static Component category() {
         //? if >=1.21.9 {
-        /*return KeyMapping.Category.INVENTORY.label();
-        *///?} else {
-        return Component.translatable("key.categories.inventory");
-        //?}
+        return KeyMapping.Category.INVENTORY.label();
+        //?} else {
+        /*return Component.translatable("key.categories.inventory");
+        *///?}
     }
 }

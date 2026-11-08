@@ -9,7 +9,7 @@ import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.client.ClutterNoMoreClient;
 import dev.tazer.clutternomore.registry.ShapeBlocks;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -82,7 +82,7 @@ public final class AssetGenerator {
     }
 
     @Nullable
-    public static ResourceLocation findModel(ResourceManager manager, BlockState state) {
+    public static Identifier findModel(ResourceManager manager, BlockState state) {
         JsonObject blockState = readJson(manager, BuiltInRegistries.BLOCK.getKey(state.getBlock()).withPrefix("blockstates/").withSuffix(".json"));
         if (blockState == null) return null;
         JsonElement first = null;
@@ -108,10 +108,10 @@ public final class AssetGenerator {
     }
 
     @Nullable
-    public static JsonObject getTextures(ResourceManager manager, ResourceLocation model) {
+    public static JsonObject getTextures(ResourceManager manager, Identifier model) {
         JsonObject textures = new JsonObject();
-        Set<ResourceLocation> visited = new HashSet<>();
-        ResourceLocation current = model;
+        Set<Identifier> visited = new HashSet<>();
+        Identifier current = model;
         while (current != null && visited.add(current)) {
             JsonObject json = readModel(manager, current);
             if (json == null) {
@@ -148,17 +148,17 @@ public final class AssetGenerator {
         return textures.get("top") == null ? null : textures;
     }
 
-    public static void generateItem(ResourceLocation parent, ResourceLocation shape, ResourceManager manager) {
+    public static void generateItem(Identifier parent, Identifier shape, ResourceManager manager) {
         generateItem(parent, shape, modelId(shape), manager);
     }
 
-    public static String modelId(ResourceLocation shape) {
+    public static String modelId(Identifier shape) {
         return "clutternomore:block/" + shape.getPath().replace("waxed_", "");
     }
 
-    public static void generateItem(ResourceLocation parent, ResourceLocation shape, String model, ResourceManager manager) {
+    public static void generateItem(Identifier parent, Identifier shape, String model, ResourceManager manager) {
         //? if >=1.21.4 {
-        /*if (manager.getResource(shape.withPrefix("items/").withSuffix(".json")).isPresent()) return;
+        if (manager.getResource(shape.withPrefix("items/").withSuffix(".json")).isPresent()) return;
         JsonObject definition = new JsonObject();
         definition.addProperty("type", "minecraft:model");
         definition.addProperty("model", model);
@@ -176,17 +176,17 @@ public final class AssetGenerator {
         JsonObject item = new JsonObject();
         item.add("model", definition);
         write("items/%s.json".formatted(shape.getPath()), item);
-        *///?} else {
-        if (manager.getResource(shape.withPrefix("models/item/").withSuffix(".json")).isPresent()) return;
+        //?} else {
+        /*if (manager.getResource(shape.withPrefix("models/item/").withSuffix(".json")).isPresent()) return;
         JsonObject item = new JsonObject();
         item.addProperty("parent", model);
         write("models/item/%s.json".formatted(shape.getPath()), item);
-        //?}
+        *///?}
     }
 
-    public static boolean hasTint(ResourceManager manager, ResourceLocation model) {
-        Set<ResourceLocation> visited = new HashSet<>();
-        ResourceLocation current = model;
+    public static boolean hasTint(ResourceManager manager, Identifier model) {
+        Set<Identifier> visited = new HashSet<>();
+        Identifier current = model;
         while (current != null && visited.add(current)) {
             JsonObject json = readModel(manager, current);
             if (json == null) return false;
@@ -205,9 +205,9 @@ public final class AssetGenerator {
     }
 
     @Nullable
-    public static String getRenderType(ResourceManager manager, ResourceLocation model) {
-        Set<ResourceLocation> visited = new HashSet<>();
-        ResourceLocation current = model;
+    public static String getRenderType(ResourceManager manager, Identifier model) {
+        Set<Identifier> visited = new HashSet<>();
+        Identifier current = model;
         while (current != null && visited.add(current)) {
             JsonObject json = readModel(manager, current);
             if (json == null) return null;
@@ -264,7 +264,7 @@ public final class AssetGenerator {
     }
 
     @Nullable
-    private static ResourceLocation modelOf(@Nullable JsonElement spec) {
+    private static Identifier modelOf(@Nullable JsonElement spec) {
         JsonElement model = spec instanceof JsonArray array ? (array.isEmpty() ? null : array.get(0)) : spec;
         if (!(model instanceof JsonObject object) || !(object.get("model") instanceof JsonPrimitive id)) return null;
         return modelId(id.getAsString());
@@ -289,17 +289,17 @@ public final class AssetGenerator {
     }
 
     @Nullable
-    private static ResourceLocation parentOf(JsonObject model) {
+    private static Identifier parentOf(JsonObject model) {
         return model.get("parent") instanceof JsonPrimitive parent ? modelId(parent.getAsString()) : null;
     }
 
     @Nullable
-    private static JsonObject readModel(ResourceManager manager, ResourceLocation model) {
+    private static JsonObject readModel(ResourceManager manager, Identifier model) {
         return readJson(manager, model.withPrefix("models/").withSuffix(".json"));
     }
 
     @Nullable
-    private static JsonObject readJson(ResourceManager manager, ResourceLocation file) {
+    private static JsonObject readJson(ResourceManager manager, Identifier file) {
         Optional<Resource> resource = manager.getResource(file);
         if (resource.isEmpty()) return null;
         try (Reader reader = resource.get().openAsReader()) {
@@ -311,7 +311,7 @@ public final class AssetGenerator {
         }
     }
 
-    private static ResourceLocation modelId(String model) {
+    private static Identifier modelId(String model) {
         String[] parts = model.split(":");
         return parts.length == 1 ? ClutterNoMore.id("minecraft", parts[0]) : ClutterNoMore.id(parts[0], parts[1]);
     }

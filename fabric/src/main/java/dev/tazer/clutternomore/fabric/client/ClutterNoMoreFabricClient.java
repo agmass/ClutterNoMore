@@ -26,20 +26,20 @@ import net.fabricmc.fabric.api.client.rendering.v1.ClientTooltipComponentCallbac
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 //?}
-//? if <26 {
-import dev.tazer.clutternomore.registry.ShapeBlocks;
+//? if <1.21.11 {
+/*import dev.tazer.clutternomore.registry.ShapeBlocks;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
-//?}
+*///?}
 //? if >=1.21.6 {
-/*import dev.tazer.clutternomore.ClutterNoMore;
+import dev.tazer.clutternomore.ClutterNoMore;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
-*///?} else {
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-//?}
+//?} else {
+/*import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+*///?}
 
 //? if <26 {
 import java.util.Map;
@@ -68,22 +68,22 @@ public final class ClutterNoMoreFabricClient implements ClientModInitializer {
         /*ItemTooltipCallback.EVENT.register((stack, flag, lines) -> ClutterNoMoreClient.onItemTooltip(stack, lines));
         *///?}
         //? if >=1.21.6 {
-        /*HudElementRegistry.addLast(ClutterNoMore.id("overlay"), ClutterNoMoreClient::onRenderGui);
-        *///?} else if >=1.21 {
-        HudRenderCallback.EVENT.register(ClutterNoMoreClient::onRenderGui);
-        //?} else {
+        HudElementRegistry.addLast(ClutterNoMore.id("overlay"), ClutterNoMoreClient::onRenderGui);
+        //?} else if >=1.21 {
+        /*HudRenderCallback.EVENT.register(ClutterNoMoreClient::onRenderGui);
+        *///?} else {
         /*HudRenderCallback.EVENT.register(ClutterNoMoreClient::renderOverlay);
         *///?}
         ClientTickEvents.START_CLIENT_TICK.register(ClutterNoMoreClient::onClientTick);
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ClutterNoMoreClient.onDisconnect());
         ScreenEvents.AFTER_INIT.register(ClutterNoMoreFabricClient::afterScreenInit);
-        //? if <26 {
-        ClientLifecycleEvents.CLIENT_STARTED.register(client -> copyRenderLayers());
-        //?}
+        //? if <1.21.11 {
+        /*ClientLifecycleEvents.CLIENT_STARTED.register(client -> copyRenderLayers());
+        *///?}
     }
 
-    //? if <26 {
-    private static void copyRenderLayers() {
+    //? if <1.21.11 {
+    /*private static void copyRenderLayers() {
         for (Map.Entry<Block, Block> entry : ShapeBlocks.getSources().entrySet()) {
             RenderType layer = ItemBlockRenderTypes.getChunkRenderType(entry.getValue().defaultBlockState());
             if (layer != RenderType.solid()) {
@@ -91,7 +91,7 @@ public final class ClutterNoMoreFabricClient implements ClientModInitializer {
             }
         }
     }
-    //?}
+    *///?}
 
     private static <T> void registerReceiver(PacketType<T> type) {
         //? if >=1.20.5 {
@@ -112,7 +112,7 @@ public final class ClutterNoMoreFabricClient implements ClientModInitializer {
     private static void afterScreenInit(Minecraft minecraft, Screen screen, int width, int height) {
         if (!(screen instanceof AbstractContainerScreen<?>)) return;
         //? if >=1.21.9 {
-        /*ScreenKeyboardEvents.afterKeyPress(screen).register((current, event) -> ClutterNoMoreClient.onKeyPress(current, event.input()));
+        ScreenKeyboardEvents.afterKeyPress(screen).register((current, event) -> ClutterNoMoreClient.onKeyPress(current, event.input()));
         ScreenKeyboardEvents.afterKeyRelease(screen).register((current, event) -> ClutterNoMoreClient.onKeyReleased(event.input()));
         ScreenMouseEvents.afterMouseClick(screen).register((current, event, doubleClick) -> {
             ClutterNoMoreClient.onKeyPress(current, event.button());
@@ -122,12 +122,12 @@ public final class ClutterNoMoreFabricClient implements ClientModInitializer {
             ClutterNoMoreClient.onKeyReleased(event.button());
             return false;
         });
-        *///?} else {
-        ScreenKeyboardEvents.afterKeyPress(screen).register((current, key, scancode, modifiers) -> ClutterNoMoreClient.onKeyPress(current, key));
+        //?} else {
+        /*ScreenKeyboardEvents.afterKeyPress(screen).register((current, key, scancode, modifiers) -> ClutterNoMoreClient.onKeyPress(current, key));
         ScreenKeyboardEvents.afterKeyRelease(screen).register((current, key, scancode, modifiers) -> ClutterNoMoreClient.onKeyReleased(key));
         ScreenMouseEvents.afterMouseClick(screen).register((current, mouseX, mouseY, button) -> ClutterNoMoreClient.onKeyPress(current, button));
         ScreenMouseEvents.afterMouseRelease(screen).register((current, mouseX, mouseY, button) -> ClutterNoMoreClient.onKeyReleased(button));
-        //?}
+        *///?}
         ScreenMouseEvents.allowMouseScroll(screen).register(ClutterNoMoreClient::allowScreenScroll);
     }
 }

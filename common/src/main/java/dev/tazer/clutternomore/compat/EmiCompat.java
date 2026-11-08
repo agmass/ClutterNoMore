@@ -1,7 +1,7 @@
 package dev.tazer.clutternomore.compat;
 
 //? if <1.21.4 {
-import dev.emi.emi.api.EmiApi;
+/*import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
@@ -34,4 +34,4 @@ public final class EmiCompat implements EmiPlugin {
         }
     }
 }
-//?}
+*///?}

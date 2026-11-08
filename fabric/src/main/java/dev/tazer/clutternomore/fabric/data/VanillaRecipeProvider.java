@@ -8,21 +8,21 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 //? if >=1.21 {
 import net.minecraft.core.HolderLookup;
 //?}
-//? if >=26 {
-/*import net.minecraft.data.recipes.RecipeProvider;
-*///?}
-//? if >=26 && <26.3 {
-/*import net.minecraft.data.recipes.RecipeOutput;
-*///?} else if <26 && >=1.21 {
-import net.minecraft.data.recipes.RecipeOutput;
+//? if >=1.21.11 {
+import net.minecraft.data.recipes.RecipeProvider;
 //?}
+//? if >=1.21.11 && <26.3 {
+import net.minecraft.data.recipes.RecipeOutput;
+//?} else if <1.21.11 && >=1.21 {
+/*import net.minecraft.data.recipes.RecipeOutput;
+*///?}
 //? if >=26.2 {
 /*import net.minecraft.world.level.block.WeatheringCopperCollection;
 *///?}
@@ -91,8 +91,8 @@ public final class VanillaRecipeProvider extends FabricRecipeProvider {
         pairs.add(new ItemLike[]{Items.CHISELED_TUFF_BRICKS, Items.TUFF_BRICKS});
         //?}
         //? if >=1.21.4 {
-        /*pairs.add(new ItemLike[]{Items.CHISELED_RESIN_BRICKS, Items.RESIN_BRICK_SLAB});
-        *///?}
+        pairs.add(new ItemLike[]{Items.CHISELED_RESIN_BRICKS, Items.RESIN_BRICK_SLAB});
+        //?}
         return pairs;
     }
 
@@ -106,8 +106,8 @@ public final class VanillaRecipeProvider extends FabricRecipeProvider {
             }
         };
     }
-    *///?} else if >=26 {
-    /*@Override
+    *///?} else if >=1.21.11 {
+    @Override
     protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
         return new RecipeProvider(registries, output) {
             @Override
@@ -116,12 +116,12 @@ public final class VanillaRecipeProvider extends FabricRecipeProvider {
             }
         };
     }
-    *///?} else if >=1.21 {
-    @Override
+    //?} else if >=1.21 {
+    /*@Override
     public void buildRecipes(RecipeOutput output) {
         build(ShapedRecipeBuilder::shaped, builder -> builder.save(output));
     }
-    //?} else {
+    *///?} else {
     /*@Override
     public void buildRecipes(Consumer<FinishedRecipe> exporter) {
         build(ShapedRecipeBuilder::shaped, builder -> builder.save(recipe -> exporter.accept(new RecipeOnly(recipe))));
@@ -133,17 +133,17 @@ public final class VanillaRecipeProvider extends FabricRecipeProvider {
         return "Vanilla Overrides";
     }
 
-    //? if >=1.21 && <26 {
-    @Override
+    //? if >=1.21 && <1.21.11 {
+    /*@Override
     public CompletableFuture<?> run(CachedOutput output, HolderLookup.Provider registries) {
         return super.run((path, data, hash) -> relocate(output, path, data, hash), registries);
     }
-    //?} else {
-    /*@Override
+    *///?} else {
+    @Override
     public CompletableFuture<?> run(CachedOutput output) {
         return super.run((path, data, hash) -> relocate(output, path, data, hash));
     }
-    *///?}
+    //?}
 
     private static void relocate(CachedOutput output, Path path, byte[] data, HashCode hash) throws IOException {
         for (int i = 0; i + 3 < path.getNameCount(); i++) {
@@ -162,7 +162,7 @@ public final class VanillaRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    protected ResourceLocation getRecipeIdentifier(ResourceLocation identifier) {
+    protected Identifier getRecipeIdentifier(Identifier identifier) {
         return ClutterNoMore.id("minecraft", identifier.getPath());
     }
 
@@ -181,7 +181,7 @@ public final class VanillaRecipeProvider extends FabricRecipeProvider {
         }
 
         @Override
-        public ResourceLocation getId() {
+        public Identifier getId() {
             return this.recipe.getId();
         }
 
@@ -198,7 +198,7 @@ public final class VanillaRecipeProvider extends FabricRecipeProvider {
 
         @Override
         @Nullable
-        public ResourceLocation getAdvancementId() {
+        public Identifier getAdvancementId() {
             return null;
         }
     }

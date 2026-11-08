@@ -1,5 +1,5 @@
 //? if <1.21.4 {
-package dev.tazer.clutternomore.mixin.client;
+/*package dev.tazer.clutternomore.mixin.client;
 
 import dev.tazer.clutternomore.shape.ShapeMap;
 import net.minecraft.client.color.item.ItemColors;
@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 //? if <1.20.5 {
-/*import net.minecraft.nbt.CompoundTag;
-*///?}
+/^import net.minecraft.nbt.CompoundTag;
+^///?}
 
 @Mixin(ItemColors.class)
 public class ItemColorsMixin {
@@ -24,16 +24,16 @@ public class ItemColorsMixin {
         //? if >=1.20.5 {
         ItemStack parentStack = stack.transmuteCopy(parent, stack.getCount());
         //?} else {
-        /*ItemStack parentStack = new ItemStack(parent, stack.getCount());
+        /^ItemStack parentStack = new ItemStack(parent, stack.getCount());
         CompoundTag tag = stack.getTag();
         if (tag != null) {
             parentStack.setTag(tag.copy());
         }
-        *///?}
+        ^///?}
         int color = ((ItemColors) (Object) this).getColor(parentStack, tintIndex);
         if (color != -1) {
             cir.setReturnValue(color);
         }
     }
 }
-//?}
+*///?}

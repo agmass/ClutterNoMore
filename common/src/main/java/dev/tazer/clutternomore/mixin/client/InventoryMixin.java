@@ -1,5 +1,5 @@
 //? if <1.21.2 {
-package dev.tazer.clutternomore.mixin.client;
+/*package dev.tazer.clutternomore.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -30,4 +30,4 @@ public abstract class InventoryMixin {
         return index;
     }
 }
-//?}
+*///?}

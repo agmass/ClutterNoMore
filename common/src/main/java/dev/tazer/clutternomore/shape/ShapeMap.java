@@ -6,7 +6,7 @@ import dev.tazer.clutternomore.network.ShapeMapSync;
 import dev.tazer.clutternomore.platform.Services;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -193,7 +193,7 @@ public final class ShapeMap {
             }
             shapesByParent.put(parent, shapes);
             if (detailedLogs && groupMappings.size() > members.size() - 1) {
-                List<ResourceLocation> ids = new ArrayList<>(members.size());
+                List<Identifier> ids = new ArrayList<>(members.size());
                 for (Item member : members) {
                     ids.add(BuiltInRegistries.ITEM.getKey(member));
                 }
@@ -255,10 +255,10 @@ public final class ShapeMap {
 
     private static Item lexicographicallyFirst(List<Item> items) {
         Item first = items.get(0);
-        ResourceLocation firstId = BuiltInRegistries.ITEM.getKey(first);
+        Identifier firstId = BuiltInRegistries.ITEM.getKey(first);
         for (int i = 1; i < items.size(); i++) {
             Item candidate = items.get(i);
-            ResourceLocation candidateId = BuiltInRegistries.ITEM.getKey(candidate);
+            Identifier candidateId = BuiltInRegistries.ITEM.getKey(candidate);
             if (candidateId.compareTo(firstId) < 0) {
                 first = candidate;
                 firstId = candidateId;
@@ -283,7 +283,7 @@ public final class ShapeMap {
         }
     }
 
-    public record Mapping(Item parent, Item shape, int priority, ResourceLocation source) {
+    public record Mapping(Item parent, Item shape, int priority, Identifier source) {
     }
 
     private record Snapshot(Map<Item, List<Item>> shapesByParent, Map<Item, Item> parentByShape) {

@@ -9,7 +9,7 @@ import dev.tazer.clutternomore.mixin.access.FireBlockAccessor;
 import dev.tazer.clutternomore.platform.Services;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.Item;
@@ -20,8 +20,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 //? if >=1.21.2 {
-/*import net.minecraft.core.registries.Registries;
-*///?}
+import net.minecraft.core.registries.Registries;
+//?}
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -128,30 +128,30 @@ public final class ShapeBlocks {
         }
     }
 
-    public static String shapePrefix(ResourceLocation parent) {
+    public static String shapePrefix(Identifier parent) {
         return parent.getNamespace().equals("minecraft") ? "" : parent.getNamespace() + "/";
     }
 
-    public static ResourceLocation verticalSlabOf(ResourceLocation slab) {
+    public static Identifier verticalSlabOf(Identifier slab) {
         String path = slab.getPath();
         String named = path.startsWith(SLAB_PREFIX) ? path.substring(SLAB_PREFIX.length()) + "_slab" : path;
         return ClutterNoMore.id(shapePrefix(slab) + "vertical_" + named);
     }
 
-    public static ResourceLocation stepOf(ResourceLocation stairs) {
+    public static Identifier stepOf(Identifier stairs) {
         String stem = prefixedStairStem(stairs.getPath());
         if (stem != null) return ClutterNoMore.id(shapePrefix(stairs) + stem + "_step");
         return ClutterNoMore.id(shapePrefix(stairs) + stairs.getPath().replace("stairs", "step"));
     }
 
-    public static ResourceLocation verticalStairsOf(ResourceLocation stairs) {
+    public static Identifier verticalStairsOf(Identifier stairs) {
         String stem = prefixedStairStem(stairs.getPath());
         if (stem != null) return ClutterNoMore.id(shapePrefix(stairs) + "vertical_" + stem + "_stairs");
         return ClutterNoMore.id(shapePrefix(stairs) + "vertical_" + stairs.getPath());
     }
 
     @Nullable
-    private static String legacyPathOf(ShapeType type, ResourceLocation source) {
+    private static String legacyPathOf(ShapeType type, Identifier source) {
         String path = source.getPath();
         String legacy = switch (type) {
             case VERTICAL_SLAB -> path.startsWith(SLAB_PREFIX) ? "vertical_" + path : null;
@@ -177,7 +177,7 @@ public final class ShapeBlocks {
         return null;
     }
 
-    public static ResourceLocation verticalStepOf(ResourceLocation stairs) {
+    public static Identifier verticalStepOf(Identifier stairs) {
         String prefixed = prefixedStairStem(stairs.getPath());
         if (prefixed != null) return ClutterNoMore.id(shapePrefix(stairs) + "vertical_" + prefixed + "_step");
         String path = stairs.getPath();
@@ -206,12 +206,12 @@ public final class ShapeBlocks {
         Map<String, ShapeType> pendingTypes = new LinkedHashMap<>();
         Map<String, String> legacies = new LinkedHashMap<>();
         List<Map.Entry<ResourceKey<Item>, Item>> items = new ArrayList<>(BuiltInRegistries.ITEM.entrySet());
-        items.sort(Comparator.comparing(entry -> entry.getKey().location()));
+        items.sort(Comparator.comparing(entry -> entry.getKey().identifier()));
         for (Map.Entry<ResourceKey<Item>, Item> entry : items) {
             if (!(entry.getValue() instanceof BlockItem blockItem)) {
                 continue;
             }
-            ResourceLocation parentId = entry.getKey().location();
+            Identifier parentId = entry.getKey().identifier();
             Block block = blockItem.getBlock();
             for (ShapeType type : types) {
                 if (!type.accepts(block)) {
@@ -243,13 +243,13 @@ public final class ShapeBlocks {
     }
 
     private static void register(String path, Function<BlockBehaviour.Properties, Block> factory, BlockItem parent, ShapeType type) {
-        ResourceLocation id = ClutterNoMore.id(path);
+        Identifier id = ClutterNoMore.id(path);
         Block block = factory.apply(copy(parent.getBlock(), id));
         Services.PLATFORM.register(BuiltInRegistries.BLOCK, id, block);
         Item.Properties properties = new Item.Properties();
         //? if >=1.21.2 {
-        /*properties.setId(ResourceKey.create(Registries.ITEM, id)).useBlockDescriptionPrefix();
-        *///?}
+        properties.setId(ResourceKey.create(Registries.ITEM, id)).useBlockDescriptionPrefix();
+        //?}
         BlockItem item = new BlockItem(block, properties);
         Services.PLATFORM.register(BuiltInRegistries.ITEM, id, item);
         SOURCES.put(block, parent.getBlock());
@@ -258,12 +258,12 @@ public final class ShapeBlocks {
         SOURCE_ITEMS.put(item, parent);
     }
 
-    private static BlockBehaviour.Properties copy(Block block, ResourceLocation id) {
+    private static BlockBehaviour.Properties copy(Block block, Identifier id) {
         //? if >=1.21.2 {
-        /*return BlockBehaviour.Properties.ofFullCopy(block).setId(ResourceKey.create(Registries.BLOCK, id));
-        *///?} else if >=1.20.5 {
-        return BlockBehaviour.Properties.ofFullCopy(block);
-        //?} else {
+        return BlockBehaviour.Properties.ofFullCopy(block).setId(ResourceKey.create(Registries.BLOCK, id));
+        //?} else if >=1.20.5 {
+        /*return BlockBehaviour.Properties.ofFullCopy(block);
+        *///?} else {
         /*return BlockBehaviour.Properties.copy(block);
         *///?}
     }
@@ -279,9 +279,9 @@ public final class ShapeBlocks {
             pair(WAXED_BLOCKS, type, shape, HoneycombItem.getWaxed(source));
         }
         for (Block shape : SOURCES.keySet()) {
-            ResourceLocation id = BuiltInRegistries.BLOCK.getKey(shape);
+            Identifier id = BuiltInRegistries.BLOCK.getKey(shape);
             if (shape instanceof WeatheringCopper) {
-                ResourceLocation previous = previousStage(id);
+                Identifier previous = previousStage(id);
                 if (previous != null) {
                     pairByName(NEXT_OXIDATION, previous, shape);
                 }
@@ -298,7 +298,7 @@ public final class ShapeBlocks {
         }
     }
 
-    private static void pairByName(BiMap<Block, Block> pairs, ResourceLocation from, Block to) {
+    private static void pairByName(BiMap<Block, Block> pairs, Identifier from, Block to) {
         Optional<Block> shape = BuiltInRegistries.BLOCK.getOptional(from);
         if (shape.isPresent() && shape.get() != to && SOURCES.containsKey(shape.get()) && !pairs.containsKey(shape.get()) && !pairs.containsValue(to)) {
             pairs.put(shape.get(), to);
@@ -306,7 +306,7 @@ public final class ShapeBlocks {
     }
 
     @Nullable
-    private static ResourceLocation previousStage(ResourceLocation id) {
+    private static Identifier previousStage(Identifier id) {
         String path = id.getPath();
         if (path.contains("oxidized")) return ClutterNoMore.id(id.getNamespace(), path.replace("oxidized", "weathered"));
         if (path.contains("weathered")) return ClutterNoMore.id(id.getNamespace(), path.replace("weathered", "exposed"));

@@ -1,5 +1,5 @@
 //? if <1.21.4 {
-package dev.tazer.clutternomore.mixin.compat.jei;
+/*package dev.tazer.clutternomore.mixin.compat.jei;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -24,4 +24,4 @@ public class ItemStackBatchRendererMixin {
         RenderHelper.shapeBadge(graphics, stack, x, y);
     }
 }
-//?}
+*///?}

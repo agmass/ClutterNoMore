@@ -14,7 +14,7 @@ import dev.tazer.clutternomore.registry.ShapeBlocks;
 import dev.tazer.clutternomore.registry.ShapeType;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.BlockItem;
@@ -41,11 +41,11 @@ public final class ShapeAssets {
     }
 
     public static void generate(ResourceManager manager) {
-        Map<ResourceLocation, JsonObject> rotateable = readRotateable(manager);
+        Map<Identifier, JsonObject> rotateable = readRotateable(manager);
         for (ShapeType type : ShapeType.values()) {
             for (Map.Entry<Item, Item> entry : ShapeBlocks.getSourceItems().entrySet()) {
                 if (entry.getKey() instanceof BlockItem shape && ShapeBlocks.getType(shape.getBlock()) == type && entry.getValue() instanceof BlockItem source) {
-                    ResourceLocation id = BuiltInRegistries.ITEM.getKey(shape);
+                    Identifier id = BuiltInRegistries.ITEM.getKey(shape);
                     JsonObject settings = type == ShapeType.VERTICAL_SLAB ? rotateable.get(BuiltInRegistries.BLOCK.getKey(source.getBlock())) : null;
                     if (settings != null && generateRotateable(source.getBlock(), id, settings, manager)) {
                         AssetGenerator.generateItem(BuiltInRegistries.ITEM.getKey(source), id, AssetGenerator.modelId(id) + "_north", manager);
@@ -58,11 +58,11 @@ public final class ShapeAssets {
         }
     }
 
-    private static Map<ResourceLocation, JsonObject> readRotateable(ResourceManager manager) {
-        Map<ResourceLocation, JsonObject> entries = new LinkedHashMap<>();
-        Map<ResourceLocation, List<Resource>> files = new TreeMap<>(manager.listResourceStacks(ROTATEABLE_DIRECTORY, id -> id.getPath().endsWith(".json")));
-        for (Map.Entry<ResourceLocation, List<Resource>> file : files.entrySet()) {
-            Map<ResourceLocation, JsonObject> values = new LinkedHashMap<>();
+    private static Map<Identifier, JsonObject> readRotateable(ResourceManager manager) {
+        Map<Identifier, JsonObject> entries = new LinkedHashMap<>();
+        Map<Identifier, List<Resource>> files = new TreeMap<>(manager.listResourceStacks(ROTATEABLE_DIRECTORY, id -> id.getPath().endsWith(".json")));
+        for (Map.Entry<Identifier, List<Resource>> file : files.entrySet()) {
+            Map<Identifier, JsonObject> values = new LinkedHashMap<>();
             for (Resource resource : file.getValue()) {
                 try (Reader reader = resource.openAsReader()) {
                     JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
@@ -83,7 +83,7 @@ public final class ShapeAssets {
         return entries;
     }
 
-    private static void readValue(JsonElement value, Map<ResourceLocation, JsonObject> values) {
+    private static void readValue(JsonElement value, Map<Identifier, JsonObject> values) {
         if (value instanceof JsonPrimitive primitive && primitive.isString()) {
             values.put(ClutterNoMore.parse(primitive.getAsString()), new JsonObject());
         } else if (value instanceof JsonObject object && object.get("id") instanceof JsonPrimitive id && id.isString()) {
@@ -93,9 +93,9 @@ public final class ShapeAssets {
         }
     }
 
-    private static boolean generateRotateable(Block source, ResourceLocation shape, JsonObject settings, ResourceManager manager) {
+    private static boolean generateRotateable(Block source, Identifier shape, JsonObject settings, ResourceManager manager) {
         if (manager.getResource(shape.withPrefix("blockstates/").withSuffix(".json")).isPresent()) return false;
-        ResourceLocation sourceModel = AssetGenerator.findModel(manager, source.defaultBlockState());
+        Identifier sourceModel = AssetGenerator.findModel(manager, source.defaultBlockState());
         if (sourceModel == null) return false;
         JsonObject sourceTextures = AssetGenerator.getTextures(manager, sourceModel);
         if (sourceTextures == null || sourceTextures.has("is_thatch")) return false;
@@ -146,9 +146,9 @@ public final class ShapeAssets {
         return value != null ? value : fallback;
     }
 
-    private static void generateBlock(ShapeType type, Block source, ResourceLocation shape, ResourceManager manager) {
+    private static void generateBlock(ShapeType type, Block source, Identifier shape, ResourceManager manager) {
         if (manager.getResource(shape.withPrefix("blockstates/").withSuffix(".json")).isPresent()) return;
-        ResourceLocation sourceModel = AssetGenerator.findModel(manager, source.defaultBlockState());
+        Identifier sourceModel = AssetGenerator.findModel(manager, source.defaultBlockState());
         if (sourceModel == null) return;
         JsonObject textures = AssetGenerator.getTextures(manager, sourceModel);
         if (textures == null) return;

@@ -5,18 +5,18 @@ import dev.tazer.clutternomore.shape.ShapeTooltip;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 //? if <1.21.2 {
-import com.mojang.blaze3d.systems.RenderSystem;
-//?}
+/*import com.mojang.blaze3d.systems.RenderSystem;
+*///?}
 
 import java.util.List;
 
 public final class ClientShapeTooltip implements ClientTooltipComponent {
 
     private static final int SPACING = 22;
-    private static final ResourceLocation SELECTED = ClutterNoMore.id("textures/gui/selected_shape_inventory.png");
+    private static final Identifier SELECTED = ClutterNoMore.id("textures/gui/selected_shape_inventory.png");
 
     private final List<ItemStack> stacks;
     private final int selectedIndex;
@@ -28,10 +28,10 @@ public final class ClientShapeTooltip implements ClientTooltipComponent {
 
     @Override
     //? if >=1.21.2 {
-    /*public int getHeight(Font font) {
-    *///?} else {
-    public int getHeight() {
-    //?}
+    public int getHeight(Font font) {
+    //?} else {
+    /*public int getHeight() {
+    *///?}
         return ClutterNoMoreClient.isRenderingIcons() ? SPACING : 0;
     }
 
@@ -44,7 +44,10 @@ public final class ClientShapeTooltip implements ClientTooltipComponent {
     //? if >=26 {
     /*public void extractImage(Font font, int x, int y, int width, int height, GuiGraphics graphics) {
     *///?} else {
-    public void renderImage(Font font, int x, int y, GuiGraphics graphics) {
+    public void renderImage(Font font, int x, int y
+            //? 1.21.11
+            , int width, int height
+            , GuiGraphics graphics) {
     //?}
         if (!ClutterNoMoreClient.isRenderingIcons()) return;
         int startX = x + 2;
@@ -53,7 +56,7 @@ public final class ClientShapeTooltip implements ClientTooltipComponent {
         }
         RenderHelper.blit(graphics, SELECTED, startX + this.selectedIndex * SPACING - 3, y - 3, SPACING, SPACING);
         //? if <1.21.2 {
-        RenderSystem.disableBlend();
-        //?}
+        /*RenderSystem.disableBlend();
+        *///?}
     }
 }

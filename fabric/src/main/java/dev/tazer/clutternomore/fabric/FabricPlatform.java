@@ -10,23 +10,23 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 //? if <1.20.5 {
 /*import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.FriendlyByteBuf;
 *///?}
-//? if >=26 {
-/*import net.minecraft.world.item.crafting.RecipeHolder;
+//? if >=1.21.11 {
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeMap;
-*///?}
+//?}
 
 import java.nio.file.Path;
 import java.util.Map;
-//? if >=26 {
-/*import java.util.List;
-*///?}
+//? if >=1.21.11 {
+import java.util.List;
+//?}
 
 public final class FabricPlatform implements Platform {
 
@@ -56,12 +56,12 @@ public final class FabricPlatform implements Platform {
     }
 
     @Override
-    public <T> void register(Registry<T> registry, ResourceLocation id, T value) {
+    public <T> void register(Registry<T> registry, Identifier id, T value) {
         Registry.register(registry, id, value);
     }
 
     @Override
-    public <T> void alias(Registry<T> registry, ResourceLocation from, ResourceLocation to) {
+    public <T> void alias(Registry<T> registry, Identifier from, Identifier to) {
         ((FabricRegistry) registry).addAlias(from, to);
     }
 
@@ -114,10 +114,10 @@ public final class FabricPlatform implements Platform {
     public RecipeMap createRecipeMap(List<RecipeHolder<?>> recipes) {
         return FabricRecipeMap.create(recipes);
     }
-    *///?} else if >=26 {
-    /*@Override
+    *///?} else if >=1.21.11 {
+    @Override
     public RecipeMap createRecipeMap(List<RecipeHolder<?>> recipes) {
         return RecipeMap.create(recipes);
     }
-    *///?}
+    //?}
 }

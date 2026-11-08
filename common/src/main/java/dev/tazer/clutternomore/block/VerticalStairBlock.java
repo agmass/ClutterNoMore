@@ -35,20 +35,20 @@ import org.jetbrains.annotations.Nullable;
 import com.mojang.serialization.MapCodec;
 //?}
 //? if >=1.21.2 {
-/*import net.minecraft.util.RandomSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
-*///?} else {
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-//?}
+//?} else {
+/*import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.state.properties.EnumProperty<Direction>;
+*///?}
 
 public class VerticalStairBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
 
     //? if >=1.20.5 && <26.3 {
     public static final MapCodec<? extends VerticalStairBlock> CODEC = simpleCodec(VerticalStairBlock::new);
     //?}
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private static final VoxelShape[] SHAPES = createShapes();
@@ -201,22 +201,22 @@ public class VerticalStairBlock extends HorizontalDirectionalBlock implements Si
     }
 
     //? if >=1.21.2 {
-    /*@Override
+    @Override
     protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         if (state.getValue(WATERLOGGED)) {
             ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
         return super.updateShape(state, level, ticks, pos, direction, neighborPos, neighborState, random).setValue(SHAPE, getStairsShape(state, level, pos));
     }
-    *///?} else if >=1.20.5 {
-    @Override
+    //?} else if >=1.20.5 {
+    /*@Override
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         if (state.getValue(WATERLOGGED)) {
             level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
         return super.updateShape(state, direction, neighborState, level, pos, neighborPos).setValue(SHAPE, getStairsShape(state, level, pos));
     }
-    //?} else {
+    *///?} else {
     /*@Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         if (state.getValue(WATERLOGGED)) {

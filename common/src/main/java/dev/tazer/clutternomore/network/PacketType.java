@@ -2,7 +2,7 @@ package dev.tazer.clutternomore.network;
 
 import dev.tazer.clutternomore.ClutterNoMore;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 //? if >=1.20.5 {
@@ -17,7 +17,7 @@ import java.util.function.Function;
 
 public final class PacketType<T> {
 
-    private final ResourceLocation id;
+    private final Identifier id;
     private final Class<T> type;
     private final boolean serverbound;
     private final BiConsumer<FriendlyByteBuf, T> writer;
@@ -53,7 +53,7 @@ public final class PacketType<T> {
         return new PacketType<>(name, type, false, writer, reader, null);
     }
 
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return this.id;
     }
 

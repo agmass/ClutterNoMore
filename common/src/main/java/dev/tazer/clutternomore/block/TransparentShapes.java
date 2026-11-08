@@ -28,7 +28,7 @@ public final class TransparentShapes {
 
     public static boolean isCulledBy(BlockState state, BlockState adjacent, Direction direction) {
         if (!adjacent.is(GLASS) && !isGlassLike(adjacent)) return false;
-        return Shapes.blockOccudes(state.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO), adjacent.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO), direction);
+        return Shapes.blockOccludes(state.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO), adjacent.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO), direction);
     }
 
     private static boolean computeGlassLike(BlockState state) {

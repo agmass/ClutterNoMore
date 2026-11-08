@@ -1,5 +1,5 @@
 //? if >=1.21.2 && <26.3 {
-/*package dev.tazer.clutternomore.fabric.mixin;
+package dev.tazer.clutternomore.fabric.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.tazer.clutternomore.registry.ShapeBlocks;
@@ -24,4 +24,4 @@ public abstract class FuelValuesMixin {
         return fuel;
     }
 }
-*///?}
+//?}

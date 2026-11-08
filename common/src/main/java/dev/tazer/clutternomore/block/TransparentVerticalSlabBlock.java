@@ -38,17 +38,17 @@ public class TransparentVerticalSlabBlock extends VerticalSlabBlock {
         return 1.0F;
     }
 
-    //? if >=26 {
-    /*@Override
+    //? if >=1.21.11 {
+    @Override
     public boolean propagatesSkylightDown(BlockState state) {
         return !state.getValue(WATERLOGGED);
     }
-    *///?} else {
-    @Override
+    //?} else {
+    /*@Override
     public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
         return !state.getValue(WATERLOGGED);
     }
-    //?}
+    *///?}
 
     @Override
     public boolean skipRendering(BlockState state, BlockState adjacent, Direction direction) {

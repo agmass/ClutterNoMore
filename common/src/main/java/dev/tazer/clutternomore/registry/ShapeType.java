@@ -15,7 +15,7 @@ import dev.tazer.clutternomore.block.WeatheringStepBlock;
 import dev.tazer.clutternomore.block.WeatheringVerticalSlabBlock;
 import dev.tazer.clutternomore.block.WeatheringVerticalStairBlock;
 import dev.tazer.clutternomore.block.WeatheringVerticalStepBlock;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
@@ -32,8 +32,8 @@ public enum ShapeType {
     VERTICAL_STEP("vertical_steps", "wooden_vertical_steps", "wooden_stairs");
 
     private final String tag;
-    private final ResourceLocation woodenTag;
-    private final ResourceLocation woodenSource;
+    private final Identifier woodenTag;
+    private final Identifier woodenSource;
 
     ShapeType(String tag, String woodenTag, String woodenSource) {
         this.tag = tag;
@@ -45,11 +45,11 @@ public enum ShapeType {
         return this.tag;
     }
 
-    public ResourceLocation getWoodenTag() {
+    public Identifier getWoodenTag() {
         return this.woodenTag;
     }
 
-    public ResourceLocation getWoodenSource() {
+    public Identifier getWoodenSource() {
         return this.woodenSource;
     }
 
@@ -69,7 +69,7 @@ public enum ShapeType {
         };
     }
 
-    public ResourceLocation idOf(ResourceLocation source) {
+    public Identifier idOf(Identifier source) {
         return switch (this) {
             case VERTICAL_SLAB -> ShapeBlocks.verticalSlabOf(source);
             case STEP -> ShapeBlocks.stepOf(source);

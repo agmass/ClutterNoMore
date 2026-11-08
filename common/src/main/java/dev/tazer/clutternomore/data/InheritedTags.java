@@ -6,7 +6,7 @@ import dev.tazer.clutternomore.registry.ShapeBlocks;
 import dev.tazer.clutternomore.registry.ShapeType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.BlockItem;
@@ -30,7 +30,7 @@ public final class InheritedTags {
         Map<Item, Item> items = ShapeBlocks.getSourceItems();
         if (blocks.isEmpty()) return;
         TagFiles blockTags = new TagFiles(manager, RuntimeData.getBlockTagFolder());
-        for (ResourceLocation tag : blockTags.listTags()) {
+        for (Identifier tag : blockTags.listTags()) {
             if (!isInherited(tag)) {
                 continue;
             }
@@ -48,14 +48,14 @@ public final class InheritedTags {
         }
     }
 
-    private static boolean isInherited(ResourceLocation tag) {
+    private static boolean isInherited(Identifier tag) {
         for (String prefix : INHERITED_PREFIXES) {
             if (tag.getPath().startsWith(prefix)) return true;
         }
         return false;
     }
 
-    private static <T> JsonArray shapesIn(Set<ResourceLocation> members, Map<T, T> sources, Registry<T> registry, Predicate<T> filter) {
+    private static <T> JsonArray shapesIn(Set<Identifier> members, Map<T, T> sources, Registry<T> registry, Predicate<T> filter) {
         JsonArray shapes = new JsonArray();
         for (Map.Entry<T, T> entry : sources.entrySet()) {
             if (filter.test(entry.getKey()) && members.contains(registry.getKey(entry.getValue()))) {
@@ -65,7 +65,7 @@ public final class InheritedTags {
         return shapes;
     }
 
-    private static void write(ResourceLocation file, JsonArray shapes) {
+    private static void write(Identifier file, JsonArray shapes) {
         ClutterNoMore.RESOURCES.addReloadedJson(PackType.SERVER_DATA, file, RuntimeData.tagFile(shapes));
     }
 }

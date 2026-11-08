@@ -6,11 +6,11 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.packs.PackType;
 //? if >=1.21.9 {
-/*import dev.tazer.clutternomore.shape.ShapeMapReloadListener;
+import dev.tazer.clutternomore.shape.ShapeMapReloadListener;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
-*///?} else {
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-//?}
+//?} else {
+/*import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+*///?}
 
 public final class ClutterNoMoreFabric implements ModInitializer {
 
@@ -18,11 +18,13 @@ public final class ClutterNoMoreFabric implements ModInitializer {
     public void onInitialize() {
         ClutterNoMore.init();
         FabricNetwork.register();
-        //? if >=1.21.9 {
+        //? if >=26 {
         /*ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(ClutterNoMore.id(ShapeMapReloadListener.DIRECTORY), new ShapeMapReloadListener());
-        *///?} else {
-        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new FabricShapeMapReloadListener());
-        //?}
+        *///?} else if 1.21.11 {
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloader(ClutterNoMore.id(ShapeMapReloadListener.DIRECTORY), new ShapeMapReloadListener());
+        //? } else {
+        /*ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new FabricShapeMapReloadListener());
+        *///?}
         ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> ShapeMap.sendShapeMap(player));
     }
 }

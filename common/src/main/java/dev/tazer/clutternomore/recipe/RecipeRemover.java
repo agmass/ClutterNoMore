@@ -29,12 +29,12 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.item.crafting.SingleItemRecipe;
 *///?}
-//? if >=26 {
-/*import dev.tazer.clutternomore.platform.Services;
+//? if >=1.21.11 {
+import dev.tazer.clutternomore.platform.Services;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
-*///?}
+//?}
 //? if >=26.3 {
 /*import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -82,14 +82,14 @@ public final class RecipeRemover {
         RegistryOps<JsonElement> ops = registries.createSerializationContext(JsonOps.INSTANCE);
         ContextMap context = ContextMap.builder().buildAndValidate(SlotDisplayContext.CONTEXT);
         Iterable<RecipeHolder<?>> source = accessor.cnm$getRecipes().values();
-        *///?} else if >=26 {
-        /*RegistryOps<JsonElement> ops = accessor.cnm$getRegistries().createSerializationContext(JsonOps.INSTANCE);
+        *///?} else if >=1.21.11 {
+        RegistryOps<JsonElement> ops = accessor.cnm$getRegistries().createSerializationContext(JsonOps.INSTANCE);
         ContextMap context = new ContextMap.Builder().create(SlotDisplayContext.CONTEXT);
         Iterable<RecipeHolder<?>> source = accessor.cnm$getRecipes().values();
-        *///?} else {
-        RegistryOps<JsonElement> ops = accessor.cnm$getRegistries().createSerializationContext(JsonOps.INSTANCE);
+        //?} else {
+        /*RegistryOps<JsonElement> ops = accessor.cnm$getRegistries().createSerializationContext(JsonOps.INSTANCE);
         Iterable<RecipeHolder<?>> source = manager.getRecipes();
-        //?}
+        *///?}
         List<RecipeHolder<?>> kept = new ArrayList<>();
         Map<Item, Set<String>> dangerousTags = new HashMap<>();
         boolean detailedLogs = ClutterNoMore.STARTUP_CONFIG.detailedLogs.value();
@@ -97,11 +97,11 @@ public final class RecipeRemover {
         for (RecipeHolder<?> holder : source) {
             try {
                 Recipe<?> recipe = holder.value();
-                //? if >=26 {
-                /*Item result = resultOf(recipe, context);
-                *///?} else {
-                Item result = recipe.getResultItem(accessor.cnm$getRegistries()).getItem();
-                //?}
+                //? if >=1.21.11 {
+                Item result = resultOf(recipe, context);
+                //?} else {
+                /*Item result = recipe.getResultItem(accessor.cnm$getRegistries()).getItem();
+                *///?}
                 if (result != null && ShapeMap.isShape(result)) {
                     continue;
                 }
@@ -135,19 +135,19 @@ public final class RecipeRemover {
                         kept.add(new RecipeHolder<>(holder.id(), decoded.get().value()));
                         continue;
                     }
-                    *///?} else if >=26 {
-                    /*Optional<Recipe<?>> decoded = Recipe.CODEC.parse(ops, json.get()).result();
+                    *///?} else if >=1.21.11 {
+                    Optional<Recipe<?>> decoded = Recipe.CODEC.parse(ops, json.get()).result();
                     if (decoded.isPresent() && resultOf(decoded.get(), context) == result) {
                         kept.add(new RecipeHolder<>(holder.id(), decoded.get()));
                         continue;
                     }
-                    *///?} else {
-                    Optional<Recipe<?>> decoded = Recipe.CODEC.parse(ops, json.get()).result();
+                    //?} else {
+                    /*Optional<Recipe<?>> decoded = Recipe.CODEC.parse(ops, json.get()).result();
                     if (decoded.isPresent() && decoded.get().getResultItem(accessor.cnm$getRegistries()).getItem() == result) {
                         kept.add(new RecipeHolder<>(holder.id(), decoded.get()));
                         continue;
                     }
-                    //?}
+                    *///?}
                 }
                 kept.add(holder);
             } catch (Exception exception) {
@@ -158,19 +158,19 @@ public final class RecipeRemover {
         if (encodeFailures > 0) {
             ClutterNoMore.LOGGER.info("[CNM] {} recipes could not be re-encoded for shape processing and were kept unchanged (enable detailed logs to list them)", encodeFailures);
         }
-        //? if >=26 {
-        /*accessor.cnm$setRecipes(Services.PLATFORM.createRecipeMap(kept));
-        *///?} else {
-        manager.replaceRecipes(kept);
-        //?}
+        //? if >=1.21.11 {
+        accessor.cnm$setRecipes(Services.PLATFORM.createRecipeMap(kept));
+        //?} else {
+        /*manager.replaceRecipes(kept);
+        *///?}
     }
 
     private static boolean mayUseShapes(Recipe<?> recipe) {
-        //? if >=26 {
-        /*List<Ingredient> ingredients = recipe.placementInfo().ingredients();
-        *///?} else {
-        List<Ingredient> ingredients = recipe.getIngredients();
-        //?}
+        //? if >=1.21.11 {
+        List<Ingredient> ingredients = recipe.placementInfo().ingredients();
+        //?} else {
+        /*List<Ingredient> ingredients = recipe.getIngredients();
+        *///?}
         if (ingredients.isEmpty()) return true;
         for (Ingredient ingredient : ingredients) {
             if (hasShape(ingredient)) return true;
@@ -179,14 +179,14 @@ public final class RecipeRemover {
     }
 
     private static boolean hasShape(Ingredient ingredient) {
-        //? if >=26 {
-        /*return ingredient.items().anyMatch(holder -> ShapeMap.isShape(holder.value()));
-        *///?} else {
-        for (ItemStack stack : ingredient.getItems()) {
+        //? if >=1.21.11 {
+        return ingredient.items().anyMatch(holder -> ShapeMap.isShape(holder.value()));
+        //?} else {
+        /*for (ItemStack stack : ingredient.getItems()) {
             if (ShapeMap.isShape(stack.getItem())) return true;
         }
         return false;
-        //?}
+        *///?}
     }
 
     private static Set<String> dangerousIds(Item result) {
@@ -227,11 +227,11 @@ public final class RecipeRemover {
 
     private static Map<String, TagInfo> buildTagCache() {
         Map<String, TagInfo> result = new HashMap<>();
-        //? if >=26 {
-        /*BuiltInRegistries.ITEM.getTags().forEach(tag -> processTag(tag, result));
-        *///?} else {
-        BuiltInRegistries.ITEM.getTags().forEach(pair -> processTag(pair.getSecond(), result));
-        //?}
+        //? if >=1.21.11 {
+        BuiltInRegistries.ITEM.getTags().forEach(tag -> processTag(tag, result));
+        //?} else {
+        /*BuiltInRegistries.ITEM.getTags().forEach(pair -> processTag(pair.getSecond(), result));
+        *///?}
         return result;
     }
 
@@ -263,8 +263,8 @@ public final class RecipeRemover {
         }
     }
 
-    //? if >=26 {
-    /*@Nullable
+    //? if >=1.21.11 {
+    @Nullable
     private static Item resultOf(Recipe<?> recipe, ContextMap context) {
         try {
             for (RecipeDisplay display : recipe.display()) {
@@ -276,7 +276,7 @@ public final class RecipeRemover {
         }
         return null;
     }
-    *///?}
+    //?}
 
     @Nullable
     private static String tagIdOf(JsonElement element) {

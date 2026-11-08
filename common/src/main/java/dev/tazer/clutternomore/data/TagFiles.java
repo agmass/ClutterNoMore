@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.tazer.clutternomore.ClutterNoMore;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
@@ -25,26 +25,26 @@ public final class TagFiles {
 
     private final ResourceManager manager;
     private final String folder;
-    private final Map<ResourceLocation, Set<ResourceLocation>> resolved = new HashMap<>();
-    private final Set<ResourceLocation> resolving = new HashSet<>();
+    private final Map<Identifier, Set<Identifier>> resolved = new HashMap<>();
+    private final Set<Identifier> resolving = new HashSet<>();
 
     public TagFiles(ResourceManager manager, String folder) {
         this.manager = manager;
         this.folder = folder;
     }
 
-    public Set<ResourceLocation> listTags() {
-        Set<ResourceLocation> tags = new LinkedHashSet<>();
+    public Set<Identifier> listTags() {
+        Set<Identifier> tags = new LinkedHashSet<>();
         int start = this.folder.length() + 1;
-        for (ResourceLocation file : this.manager.listResources(this.folder, id -> id.getPath().endsWith(".json")).keySet()) {
+        for (Identifier file : this.manager.listResources(this.folder, id -> id.getPath().endsWith(".json")).keySet()) {
             String path = file.getPath();
             tags.add(ClutterNoMore.id(file.getNamespace(), path.substring(start, path.length() - ".json".length())));
         }
         return tags;
     }
 
-    public Set<ResourceLocation> resolve(ResourceLocation tag) {
-        Set<ResourceLocation> known = this.resolved.get(tag);
+    public Set<Identifier> resolve(Identifier tag) {
+        Set<Identifier> known = this.resolved.get(tag);
         if (known != null) return known;
         if (!this.resolving.add(tag)) return Set.of();
         List<TagReference> values = new ArrayList<>();
@@ -63,7 +63,7 @@ public final class TagFiles {
                 collect(json.get(key), removed);
             }
         }
-        Set<ResourceLocation> members = new HashSet<>();
+        Set<Identifier> members = new HashSet<>();
         for (TagReference value : values) {
             if (value.tag()) {
                 members.addAll(this.resolve(value.id()));
@@ -83,10 +83,10 @@ public final class TagFiles {
         return members;
     }
 
-    public Set<ResourceLocation> resolveEntry(String entry) {
+    public Set<Identifier> resolveEntry(String entry) {
         if (entry.isEmpty()) return Set.of();
         boolean tag = entry.startsWith("#");
-        ResourceLocation id = ResourceLocation.tryParse(tag ? entry.substring(1) : entry);
+        Identifier id = Identifier.tryParse(tag ? entry.substring(1) : entry);
         if (id == null) return Set.of();
         return tag ? this.resolve(id) : Set.of(id);
     }
@@ -110,13 +110,13 @@ public final class TagFiles {
                 continue;
             }
             boolean tag = id.startsWith("#");
-            ResourceLocation location = ResourceLocation.tryParse(tag ? id.substring(1) : id);
+            Identifier location = Identifier.tryParse(tag ? id.substring(1) : id);
             if (location != null) {
                 output.add(new TagReference(location, tag));
             }
         }
     }
 
-    private record TagReference(ResourceLocation id, boolean tag) {
+    private record TagReference(Identifier id, boolean tag) {
     }
 }

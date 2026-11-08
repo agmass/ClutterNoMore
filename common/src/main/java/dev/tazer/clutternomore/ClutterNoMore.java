@@ -2,7 +2,7 @@ package dev.tazer.clutternomore;
 
 import dev.tazer.clutternomore.data.RuntimePackResources;
 import dev.tazer.clutternomore.platform.Services;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,23 +23,23 @@ public final class ClutterNoMore {
         LOGGER.info("Initializing {} on {}", MOD_ID, Services.PLATFORM.getName());
     }
 
-    public static ResourceLocation id(String path) {
+    public static Identifier id(String path) {
         return id(MOD_ID, path);
     }
 
-    public static ResourceLocation id(String namespace, String path) {
+    public static Identifier id(String namespace, String path) {
         //? if >=1.21 {
-        return ResourceLocation.fromNamespaceAndPath(namespace, path);
+        return Identifier.fromNamespaceAndPath(namespace, path);
         //?} else {
-        /*return new ResourceLocation(namespace, path);
+        /*return new Identifier(namespace, path);
         *///?}
     }
 
-    public static ResourceLocation parse(String id) {
+    public static Identifier parse(String id) {
         //? if >=1.21 {
-        return ResourceLocation.parse(id);
+        return Identifier.parse(id);
         //?} else {
-        /*return new ResourceLocation(id);
+        /*return new Identifier(id);
         *///?}
     }
 }

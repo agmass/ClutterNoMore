@@ -3,7 +3,7 @@ package dev.tazer.clutternomore.platform;
 import dev.tazer.clutternomore.mixin.access.FireBlockAccessor;
 import dev.tazer.clutternomore.network.PacketType;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.ItemStack;
@@ -11,16 +11,16 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
-//? if >=26 {
-/*import net.minecraft.world.item.crafting.RecipeHolder;
+//? if >=1.21.11 {
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeMap;
-*///?}
+//?}
 
 import java.nio.file.Path;
 import java.util.Optional;
-//? if >=26 {
-/*import java.util.List;
-*///?}
+//? if >=1.21.11 {
+import java.util.List;
+//?}
 
 public interface Platform {
 
@@ -34,9 +34,9 @@ public interface Platform {
 
     Path getConfigDirectory();
 
-    <T> void register(Registry<T> registry, ResourceLocation id, T value);
+    <T> void register(Registry<T> registry, Identifier id, T value);
 
-    <T> void alias(Registry<T> registry, ResourceLocation from, ResourceLocation to);
+    <T> void alias(Registry<T> registry, Identifier from, Identifier to);
 
     void beforeShapeRegistration();
 
@@ -64,7 +64,7 @@ public interface Platform {
 
     <T> void sendToPlayer(ServerPlayer player, PacketType<T> type, T packet);
 
-    //? if >=26 {
-    /*RecipeMap createRecipeMap(List<RecipeHolder<?>> recipes);
-    *///?}
+    //? if >=1.21.11 {
+    RecipeMap createRecipeMap(List<RecipeHolder<?>> recipes);
+    //?}
 }

@@ -1,7 +1,7 @@
 package dev.tazer.clutternomore.recipe;
 
 import dev.tazer.clutternomore.ClutterNoMore;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -31,8 +31,8 @@ public final class RecipeFixes {
     public static void generate(ResourceManager manager) {
         enabled = ClutterNoMore.STARTUP_CONFIG.recipeFixes.value();
         if (!enabled) return;
-        for (Map.Entry<ResourceLocation, Resource> entry : manager.listResources(DIRECTORY, id -> id.getNamespace().equals(ClutterNoMore.MOD_ID) && id.getPath().endsWith(".json")).entrySet()) {
-            ResourceLocation target = target(entry.getKey());
+        for (Map.Entry<Identifier, Resource> entry : manager.listResources(DIRECTORY, id -> id.getNamespace().equals(ClutterNoMore.MOD_ID) && id.getPath().endsWith(".json")).entrySet()) {
+            Identifier target = target(entry.getKey());
             if (target == null) {
                 continue;
             }
@@ -45,7 +45,7 @@ public final class RecipeFixes {
     }
 
     @Nullable
-    private static ResourceLocation target(ResourceLocation file) {
+    private static Identifier target(Identifier file) {
         String path = file.getPath().substring(DIRECTORY.length() + 1);
         int separator = path.indexOf('/');
         if (separator <= 0) return null;

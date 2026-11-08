@@ -10,7 +10,7 @@ import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.platform.Services;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -157,7 +157,7 @@ public record ShapeMapFile(int priority, Map<ShapeMapFile.Key, ShapeMapFile.Rule
 
         String getRaw();
 
-        record Literal(ResourceLocation id) implements Key {
+        record Literal(Identifier id) implements Key {
 
             @Override
             public String getRaw() {
@@ -165,7 +165,7 @@ public record ShapeMapFile(int priority, Map<ShapeMapFile.Key, ShapeMapFile.Rule
             }
         }
 
-        record Tag(ResourceLocation tagId) implements Key {
+        record Tag(Identifier tagId) implements Key {
 
             @Override
             public String getRaw() {
@@ -275,7 +275,7 @@ public record ShapeMapFile(int priority, Map<ShapeMapFile.Key, ShapeMapFile.Rule
         public static final Codec<Rule> CODEC = Codec.either(Template.CODEC.listOf(), OBJECT_CODEC).xmap(either -> either.map(list -> new Rule(list, Optional.empty()), rule -> rule), rule -> rule.conditions().isEmpty() ? Either.left(rule.shapes()) : Either.right(rule));
     }
 
-    public record ScanIndex(List<Item> items, ResourceLocation[] identifiers, String[] ids, Map<String, List<Item>> byPath) {
+    public record ScanIndex(List<Item> items, Identifier[] identifiers, String[] ids, Map<String, List<Item>> byPath) {
 
         @Nullable
         private static ScanIndex cached;
@@ -294,11 +294,11 @@ public record ShapeMapFile(int priority, Map<ShapeMapFile.Key, ShapeMapFile.Rule
             for (Item item : BuiltInRegistries.ITEM) {
                 items.add(item);
             }
-            ResourceLocation[] identifiers = new ResourceLocation[items.size()];
+            Identifier[] identifiers = new Identifier[items.size()];
             String[] ids = new String[items.size()];
             Map<String, List<Item>> byPath = new HashMap<>();
             for (int i = 0; i < items.size(); i++) {
-                ResourceLocation id = BuiltInRegistries.ITEM.getKey(items.get(i));
+                Identifier id = BuiltInRegistries.ITEM.getKey(items.get(i));
                 identifiers[i] = id;
                 ids[i] = id.toString();
                 byPath.computeIfAbsent(id.getPath(), key -> new ArrayList<>()).add(items.get(i));
@@ -315,7 +315,7 @@ public record ShapeMapFile(int priority, Map<ShapeMapFile.Key, ShapeMapFile.Rule
         record Tag(TagKey<Item> tagKey) implements Selector {
         }
 
-        record Literal(ResourceLocation id) implements Selector {
+        record Literal(Identifier id) implements Selector {
         }
     }
 }

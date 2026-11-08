@@ -1,5 +1,5 @@
 //? if <1.21.4 {
-package dev.tazer.clutternomore.mixin.compat.emi;
+/*package dev.tazer.clutternomore.mixin.compat.emi;
 
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.ItemEmiStack;
@@ -28,4 +28,4 @@ public class ItemEmiStackMixin {
         RenderHelper.shapeBadge(graphics, ((EmiStack) (Object) this).getItemStack(), x, y);
     }
 }
-//?}
+*///?}

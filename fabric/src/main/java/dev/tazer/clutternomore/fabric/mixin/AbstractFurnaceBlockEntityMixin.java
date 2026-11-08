@@ -1,5 +1,5 @@
 //? if <1.21.2 {
-package dev.tazer.clutternomore.fabric.mixin;
+/*package dev.tazer.clutternomore.fabric.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.tazer.clutternomore.registry.ShapeBlocks;
@@ -19,4 +19,4 @@ public class AbstractFurnaceBlockEntityMixin {
         return fuel;
     }
 }
-//?}
+*///?}

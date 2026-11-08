@@ -13,18 +13,18 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 //? if >=1.21.9 {
-/*import net.minecraft.client.input.KeyEvent;
-*///?}
+import net.minecraft.client.input.KeyEvent;
+//?}
 
 @Mixin(AbstractContainerScreen.class)
 public class AbstractContainerScreenMixin {
 
-    //? if >=26 {
+    //? if >=1.21.11 {
     /*@Inject(method = "extractSlot", at = @At("RETURN"))
     private void cnm$shapeIndicator(GuiGraphics graphics, Slot slot, int mouseX, int mouseY, CallbackInfo ci) {
     *///?} else {
     @Inject(method = "renderSlot", at = @At("RETURN"))
-    private void cnm$shapeIndicator(GuiGraphics graphics, Slot slot, CallbackInfo ci) {
+    private void cnm$shapeIndicator(GuiGraphics graphics, Slot slot, int mouseX, int mouseY, CallbackInfo ci) {
     //?}
         if (ClutterNoMoreClient.isCreativeTabSlot(slot)) {
             RenderHelper.shapeBadge(graphics, slot.getItem(), slot.x, slot.y);
@@ -32,7 +32,7 @@ public class AbstractContainerScreenMixin {
     }
 
     //? if >=1.21.9 {
-    /*@Inject(method = "checkHotbarKeyPressed", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "checkHotbarKeyPressed", at = @At("HEAD"), cancellable = true)
     private void cnm$hotbarSelectsShape(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
         KeyMapping[] hotbar = Minecraft.getInstance().options.keyHotbarSlots;
         for (int i = 0; i < hotbar.length; i++) {
@@ -42,8 +42,8 @@ public class AbstractContainerScreenMixin {
             }
         }
     }
-    *///?} else {
-    @Inject(method = "checkHotbarKeyPressed", at = @At("HEAD"), cancellable = true)
+    //?} else {
+    /*@Inject(method = "checkHotbarKeyPressed", at = @At("HEAD"), cancellable = true)
     private void cnm$hotbarSelectsShape(int keyCode, int scanCode, CallbackInfoReturnable<Boolean> cir) {
         KeyMapping[] hotbar = Minecraft.getInstance().options.keyHotbarSlots;
         for (int i = 0; i < hotbar.length; i++) {
@@ -53,5 +53,5 @@ public class AbstractContainerScreenMixin {
             }
         }
     }
-    //?}
+    *///?}
 }

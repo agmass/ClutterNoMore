@@ -8,22 +8,22 @@ import net.minecraft.core.HolderLookup;
 //? if >=1.21 {
 import org.spongepowered.asm.mixin.gen.Accessor;
 //?}
-//? if >=26 {
-/*import net.minecraft.world.item.crafting.RecipeMap;
+//? if >=1.21.11 {
+import net.minecraft.world.item.crafting.RecipeMap;
 import org.spongepowered.asm.mixin.Mutable;
-*///?}
+//?}
 
 @Mixin(RecipeManager.class)
 public interface RecipeManagerAccessor {
 
-    //? if >=26 {
-    /*@Accessor("recipes")
+    //? if >=1.21.11 {
+    @Accessor("recipes")
     RecipeMap cnm$getRecipes();
 
     @Accessor("recipes")
     @Mutable
     void cnm$setRecipes(RecipeMap recipes);
-    *///?}
+    //?}
 
     //? if >=1.21 && <26.3 {
     @Accessor("registries")

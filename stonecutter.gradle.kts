@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.moddev.legacyforge) apply false
 }
 
-stonecutter active "1.21.1"
+stonecutter active "1.21.11"
 
 stonecutter tasks {
     order("publishModrinth") { branch.id != "common" }

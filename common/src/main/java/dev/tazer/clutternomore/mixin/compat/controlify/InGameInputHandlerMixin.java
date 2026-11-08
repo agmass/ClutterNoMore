@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(InGameInputHandler.class)
 public class InGameInputHandlerMixin {
 
-    //? if >=26 {
-    /*@WrapOperation(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;setSelectedSlot(I)V", ordinal = 0, remap = true), remap = false)
+    //? if >=1.21.11 {
+    @WrapOperation(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;setSelectedSlot(I)V", ordinal = 0, remap = true), remap = false)
     private void cnm$previousShape(Inventory inventory, int index, Operation<Void> original) {
         if (!ClutterNoMoreClient.previousSlot()) {
             original.call(inventory, index);
@@ -29,8 +29,8 @@ public class InGameInputHandlerMixin {
             original.call(inventory, index);
         }
     }
-    *///?} else {
-    @WrapOperation(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;swapPaint(D)V", ordinal = 0, remap = true), remap = false)
+    //?} else {
+    /*@WrapOperation(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;swapPaint(D)V", ordinal = 0, remap = true), remap = false)
     private void cnm$previousShape(Inventory inventory, double direction, Operation<Void> original) {
         if (!ClutterNoMoreClient.previousSlot()) {
             original.call(inventory, direction);
@@ -43,5 +43,5 @@ public class InGameInputHandlerMixin {
             original.call(inventory, direction);
         }
     }
-    //?}
+    *///?}
 }

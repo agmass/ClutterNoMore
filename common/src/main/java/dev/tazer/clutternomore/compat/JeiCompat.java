@@ -9,7 +9,7 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +34,7 @@ public final class JeiCompat implements IModPlugin {
     }
 
     @Override
-    public ResourceLocation getPluginUid() {
+    public Identifier getPluginUid() {
         return ClutterNoMore.id("jei");
     }
 
@@ -52,7 +52,7 @@ public final class JeiCompat implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         List<ItemStack> hidden = new ArrayList<>();
         for (Map.Entry<ResourceKey<Item>, Item> entry : BuiltInRegistries.ITEM.entrySet()) {
-            if (ShapeMap.isShape(entry.getValue()) || entry.getKey().location().getNamespace().equals(ClutterNoMore.MOD_ID)) {
+            if (ShapeMap.isShape(entry.getValue()) || entry.getKey().identifier().getNamespace().equals(ClutterNoMore.MOD_ID)) {
                 hidden.add(entry.getValue().getDefaultInstance());
             }
         }

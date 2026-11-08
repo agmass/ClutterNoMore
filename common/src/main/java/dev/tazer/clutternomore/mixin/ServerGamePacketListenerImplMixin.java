@@ -1,5 +1,5 @@
 //? if >=1.21.2 {
-/*package dev.tazer.clutternomore.mixin;
+package dev.tazer.clutternomore.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -27,4 +27,4 @@ public abstract class ServerGamePacketListenerImplMixin {
         return index;
     }
 }
-*///?}
+//?}

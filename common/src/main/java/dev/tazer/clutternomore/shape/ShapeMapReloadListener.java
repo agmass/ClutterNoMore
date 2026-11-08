@@ -6,7 +6,7 @@ import com.mojang.serialization.JsonOps;
 import dev.tazer.clutternomore.ClutterNoMore;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.tags.TagKey;
@@ -14,11 +14,11 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 //? if >=1.21.2 {
-/*import net.minecraft.resources.FileToIdConverter;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.util.ExtraCodecs;
-*///?} else {
-import com.google.gson.Gson;
-//?}
+//?} else {
+/*import com.google.gson.Gson;
+*///?}
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -33,10 +33,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 //? if >=1.21.2 {
-/*public class ShapeMapReloadListener extends SimpleJsonResourceReloadListener<JsonElement> {
-*///?} else {
-public class ShapeMapReloadListener extends SimpleJsonResourceReloadListener {
-//?}
+public class ShapeMapReloadListener extends SimpleJsonResourceReloadListener<JsonElement> {
+//?} else {
+/*public class ShapeMapReloadListener extends SimpleJsonResourceReloadListener {
+*///?}
 
     public static final String DIRECTORY = "shape_map";
     private static final Pattern NAMED_GROUP = Pattern.compile("\\(\\?<([a-zA-Z][a-zA-Z0-9]*)>");
@@ -45,17 +45,17 @@ public class ShapeMapReloadListener extends SimpleJsonResourceReloadListener {
 
     public ShapeMapReloadListener() {
         //? if >=1.21.2 {
-        /*super(ExtraCodecs.JSON, FileToIdConverter.json(DIRECTORY));
-        *///?} else {
-        super(new Gson(), DIRECTORY);
-        //?}
+        super(ExtraCodecs.JSON, FileToIdConverter.json(DIRECTORY));
+        //?} else {
+        /*super(new Gson(), DIRECTORY);
+        *///?}
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> files, ResourceManager manager, ProfilerFiller profiler) {
+    protected void apply(Map<Identifier, JsonElement> files, ResourceManager manager, ProfilerFiller profiler) {
         List<LoadedFile> loaded = new ArrayList<>();
         if (ClutterNoMore.STARTUP_CONFIG.shapeMaps.value()) {
-            for (Map.Entry<ResourceLocation, JsonElement> entry : files.entrySet()) {
+            for (Map.Entry<Identifier, JsonElement> entry : files.entrySet()) {
                 DataResult<ShapeMapFile> parsed = ShapeMapFile.CODEC.parse(JsonOps.INSTANCE, entry.getValue());
                 parsed.error().ifPresent(error -> ClutterNoMore.LOGGER.error("[ShapeMap] failed to parse '{}': {}", entry.getKey(), error.message()));
                 parsed.result().ifPresent(file -> loaded.add(new LoadedFile(entry.getKey(), file)));
@@ -107,7 +107,7 @@ public class ShapeMapReloadListener extends SimpleJsonResourceReloadListener {
         }
     }
 
-    private static void warnTagOnTag(ShapeMapFile.Key key, List<ShapeMapFile.Template> templates, ResourceLocation source) {
+    private static void warnTagOnTag(ShapeMapFile.Key key, List<ShapeMapFile.Template> templates, Identifier source) {
         for (ShapeMapFile.Template template : templates) {
             if (template.raw().startsWith("#")) {
                 ClutterNoMore.LOGGER.info("[ShapeMap] tag-on-tag rule '{}' -> '{}' produces a full cross product shape set in {}. This is not recommended and likely a mistake!", key.getRaw(), template.raw(), source);
@@ -171,7 +171,7 @@ public class ShapeMapReloadListener extends SimpleJsonResourceReloadListener {
 
     @Nullable
     private static Map<String, String> matchKey(ShapeMapFile.Key key, Item parent) {
-        ResourceLocation parentId = BuiltInRegistries.ITEM.getKey(parent);
+        Identifier parentId = BuiltInRegistries.ITEM.getKey(parent);
         if (key instanceof ShapeMapFile.Key.Literal literal) return literal.id().equals(parentId) ? defaultVars(parentId) : null;
         if (key instanceof ShapeMapFile.Key.Tag tag) return BuiltInRegistries.ITEM.wrapAsHolder(parent).is(TagKey.create(Registries.ITEM, tag.tagId())) ? defaultVars(parentId) : null;
         if (key instanceof ShapeMapFile.Key.Regex regex) {
@@ -182,7 +182,7 @@ public class ShapeMapReloadListener extends SimpleJsonResourceReloadListener {
         return null;
     }
 
-    private static List<KeyMatch> resolveKey(ShapeMapFile.Key key, ResourceLocation source, boolean detailed, ShapeMapFile.ScanIndex index) {
+    private static List<KeyMatch> resolveKey(ShapeMapFile.Key key, Identifier source, boolean detailed, ShapeMapFile.ScanIndex index) {
         if (key instanceof ShapeMapFile.Key.Literal literal) {
             Optional<Item> item = BuiltInRegistries.ITEM.getOptional(literal.id());
             return item.map(value -> List.of(new KeyMatch(value, defaultVars(literal.id())))).orElseGet(List::of);
@@ -215,7 +215,7 @@ public class ShapeMapReloadListener extends SimpleJsonResourceReloadListener {
         return List.of();
     }
 
-    private static Map<String, String> captureVars(ResourceLocation id, Matcher matcher, Set<String> names) {
+    private static Map<String, String> captureVars(Identifier id, Matcher matcher, Set<String> names) {
         Map<String, String> vars = defaultVars(id);
         for (int group = 1; group <= matcher.groupCount(); group++) {
             String captured = matcher.group(group);
@@ -235,7 +235,7 @@ public class ShapeMapReloadListener extends SimpleJsonResourceReloadListener {
         return vars;
     }
 
-    private static List<Item> resolveValue(String resolved, String original, ResourceLocation source, boolean detailed, ShapeMapFile.ScanIndex index) {
+    private static List<Item> resolveValue(String resolved, String original, Identifier source, boolean detailed, ShapeMapFile.ScanIndex index) {
         List<Item> items = ShapeMapFile.resolveItems(resolved, message -> ClutterNoMore.LOGGER.error("[ShapeMap] {} (from template '{}') in {}", message, original, source), index);
         if (detailed && resolved.startsWith("#") && items.isEmpty()) {
             ClutterNoMore.LOGGER.info("[ShapeMap] missing/empty tag '{}' (value in {})", resolved, source);
@@ -253,7 +253,7 @@ public class ShapeMapReloadListener extends SimpleJsonResourceReloadListener {
         return items;
     }
 
-    private static Map<String, String> defaultVars(ResourceLocation id) {
+    private static Map<String, String> defaultVars(Identifier id) {
         Map<String, String> vars = new HashMap<>();
         vars.put("ns", id.getNamespace());
         vars.put("path", id.getPath());
@@ -269,7 +269,7 @@ public class ShapeMapReloadListener extends SimpleJsonResourceReloadListener {
         return names;
     }
 
-    private record LoadedFile(ResourceLocation id, ShapeMapFile contents) {
+    private record LoadedFile(Identifier id, ShapeMapFile contents) {
     }
 
     private record KeyMatch(Item item, Map<String, String> vars) {

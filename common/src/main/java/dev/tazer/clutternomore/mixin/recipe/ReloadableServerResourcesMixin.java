@@ -22,21 +22,21 @@ public class ReloadableServerResourcesMixin {
     @Final
     private RecipeManager recipes;
 
-    //? if >=26 {
-    /*@Inject(method = "updateComponentsAndStaticRegistryTags", at = @At("RETURN"))
+    //? if >=1.21.11 {
+    @Inject(method = "updateStaticRegistryTags", at = @At("RETURN"))
     private void cnm$applyShapeMaps(CallbackInfo ci) {
         ShapeMapReloadListener.resolve();
         ShapeBlocks.applyFlammability();
         RecipeRemover.removeShapeRecipes(this.recipes);
     }
-    *///?} else if >=1.21 {
-    @Inject(method = "updateRegistryTags()V", at = @At("RETURN"))
+    //?} else if >=1.21 {
+    /*@Inject(method = "updateRegistryTags()V", at = @At("RETURN"))
     private void cnm$applyShapeMaps(CallbackInfo ci) {
         ShapeMapReloadListener.resolve();
         ShapeBlocks.applyFlammability();
         RecipeRemover.removeShapeRecipes(this.recipes);
     }
-    //?} else {
+    *///?} else {
     /*@Inject(method = "updateRegistryTags(Lnet/minecraft/core/RegistryAccess;)V", at = @At("RETURN"))
     private void cnm$applyShapeMaps(RegistryAccess registryAccess, CallbackInfo ci) {
         ShapeMapReloadListener.resolve();

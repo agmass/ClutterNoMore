@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.registry.ShapeType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 
 import java.util.EnumMap;
@@ -18,7 +18,7 @@ public final class RuntimeData {
     private RuntimeData() {
     }
 
-    public static void addToTag(ShapeType tag, ResourceLocation id) {
+    public static void addToTag(ShapeType tag, Identifier id) {
         TAGS.computeIfAbsent(tag, key -> new JsonArray()).add(id.toString());
     }
 
@@ -46,15 +46,15 @@ public final class RuntimeData {
         *///?}
     }
 
-    public static void writeServerData(ResourceLocation file, JsonElement contents) {
+    public static void writeServerData(Identifier file, JsonElement contents) {
         ClutterNoMore.RESOURCES.addJson(PackType.SERVER_DATA, file, contents);
     }
 
-    public static ResourceLocation blockTagFile(ResourceLocation tag) {
+    public static Identifier blockTagFile(Identifier tag) {
         return ClutterNoMore.id(tag.getNamespace(), getBlockTagFolder() + "/" + tag.getPath() + ".json");
     }
 
-    public static ResourceLocation itemTagFile(ResourceLocation tag) {
+    public static Identifier itemTagFile(Identifier tag) {
         return ClutterNoMore.id(tag.getNamespace(), getItemTagFolder() + "/" + tag.getPath() + ".json");
     }
 

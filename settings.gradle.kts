@@ -18,11 +18,11 @@ stonecutter {
         vcsVersion = "1.21.1"
 
         branch("common") {
-            versions("1.20.1", "1.21.1").buildscript("build.obfuscated.gradle.kts")
+            versions("1.20.1", "1.21.1","1.21.11").buildscript("build.obfuscated.gradle.kts")
             versions("26.1.2", "26.2", "26.3")
         }
         branch("fabric") {
-            versions("1.20.1", "1.21.1").buildscript("build.obfuscated.gradle.kts")
+            versions("1.20.1", "1.21.1","1.21.11").buildscript("build.obfuscated.gradle.kts")
             versions("26.1.2", "26.2", "26.3")
         }
         branch("neoforge") {

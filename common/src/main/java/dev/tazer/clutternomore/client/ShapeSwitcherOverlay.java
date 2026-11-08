@@ -7,14 +7,14 @@ import dev.tazer.clutternomore.shape.ShapeMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 //? if <1.21.2 {
-import com.mojang.blaze3d.systems.RenderSystem;
-//?}
+/*import com.mojang.blaze3d.systems.RenderSystem;
+*///?}
 
 import java.util.List;
 import java.util.Objects;
@@ -23,8 +23,8 @@ public final class ShapeSwitcherOverlay {
 
     private static final float LOOK_DEGREES_PER_SWITCH = 25.0F;
     private static final int SPACING = 22;
-    private static final ResourceLocation BACKGROUND = ClutterNoMore.id("textures/gui/shape_background.png");
-    private static final ResourceLocation SELECTED = ClutterNoMore.id("textures/gui/selected_shape.png");
+    private static final Identifier BACKGROUND = ClutterNoMore.id("textures/gui/shape_background.png");
+    private static final Identifier SELECTED = ClutterNoMore.id("textures/gui/selected_shape.png");
 
     private final Minecraft minecraft;
     private final boolean visible;
@@ -84,8 +84,8 @@ public final class ShapeSwitcherOverlay {
             //?}
         }
         //? if <1.21.2 {
-        RenderSystem.disableBlend();
-        //?}
+        /*RenderSystem.disableBlend();
+        *///?}
     }
 
     private void renderShapes(GuiGraphics graphics, ItemStack held, int startX, int y) {
